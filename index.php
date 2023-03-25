@@ -1,3 +1,5 @@
+<?php include_once("config.php"); ?>
+
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -73,16 +75,16 @@
               <span>Email</span>
             </div>
             <div class="input-container">
-              <input type="tel" name="phone" class="input" />
+              <input type="tel" name="mobile" class="input" />
               <label for="">Phone</label>
               <span>Phone</span>
             </div>
             <div class="input-container textarea">
-              <textarea name="message" class="input"></textarea>
+              <textarea name="comment" class="input"></textarea>
               <label for="">Message</label>
               <span>Message</span>
             </div>
-            <input type="submit" value="Send" class="btn" />
+            <input type="submit" name="submit"value="Send" class="btn" />
           </form>
         </div>
       </div>
@@ -91,4 +93,22 @@
     <script src="app.js"></script>
   </body>
 </html>
+<?php
+if(isset($_POST['submit'])){
+  $name = mysqli_real_escape_string($con, $_POST['name']);
+  $mobile = mysqli_real_escape_string($con, $_POST['mobile']);
+  $email = mysqli_real_escape_string($con, $_POST['email']);
+  $comment = mysqli_real_escape_string($con, $_POST['comment']); 
+  $comment = str_replace("\n", "<br>", $comment);
+  if(!empty($comment) && !empty($name) && !empty($email) && !empty($mobile)){
+    if(filter_var($email, FILTER_VALIDATE_EMAIL)){
+      $time = time();
+      $ran_id = rand(time(), 100000000);
+      $insert_query = mysqli_query($con, "INSERT INTO contact_us (id, name,  email, mobile,  comment)  VALUES ('{$ran_id}', '{$name}', '{$email}', '{$mobile}', '{$comment}')");
+      
+    }
+  }else{
+    echo "<script>alert('Please fill all the fields')</script>";
+  }
+}
 
